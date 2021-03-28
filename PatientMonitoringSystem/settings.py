@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'DeviceController.apps.DevicecontrollerConfig',
     'DataController.apps.DatacontrollerConfig',
+    'GraphController.apps.GraphcontrollerConfig',
+    'chartjs',
 ]
 
 MIDDLEWARE = [
