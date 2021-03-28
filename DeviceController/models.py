@@ -7,9 +7,6 @@ class Device(models.Model):
     IP_ADDRESS = models.GenericIPAddressField(blank=False)
     LOCATION = models.CharField(max_length=100, blank=False)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.ip_address = None
 
     def __str__(self):
-        return str(self.DEVICE_NAME+" : "+self.ip_address)
+        return str(self.DEVICE_NAME+" : "+self.IP_ADDRESS)
