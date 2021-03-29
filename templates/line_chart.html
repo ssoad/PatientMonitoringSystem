@@ -1,0 +1,69 @@
+{% load static %}
+<html>
+    <head>
+        <title>Patient Monitoring System</title>
+        <!--[if lte IE 8]>
+            <script src="{% static 'js/excanvas.js' %}"></script>
+        <![endif]-->
+        <style>
+                div {
+                  column-gap: 400px;
+                }
+                .column {
+                    float: left;
+                    width: 50%;
+                }
+
+/* Clear floats after the columns */
+                .row:after {
+                    content: "";
+                    display: table;
+                    clear: both;
+                }
+        </style>
+    </head>
+    <body>
+        <h1>IP: {{ ip }}</h1>
+        <div class="row">
+            <div class="column">
+                <div class="chart-container" style="position: relative; height:500px; width:600px; padding-left: 80px;">
+                    <canvas id="heart_rate" width="80" height="50"></canvas>
+                </div>
+            </div>
+            <div class="column">
+                 <div class="chart-container" style="position: relative; height:500px; width:600px; padding-left: 80px;">
+                        <canvas id="blood_pressure" width="80" height="50"></canvas>
+                 </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+        <script type="text/javascript">
+            var c;
+            $.get('/heart_data/{{ ip }}', function(data) {
+                var ctx = $("#heart_rate").get(0).getContext("2d");
+                 c = new Chart(ctx, {
+                    type: 'line', data: data['heart_rate']
+                });
+                c.update(0)
+            });
+            $.get('/blood_data/{{ ip }}', function(data) {
+                var ctx = $("#blood_pressure").get(0).getContext("2d");
+                 c = new Chart(ctx, {
+                    type: 'line', data: data['blood_pressure']
+                });
+                c.update(0)
+            });
+            window.setTimeout(function () {
+{#               function reloadMyChart() {#}
+{#                    $('heart_rate').replaceWith('<canvas id="heart_rate"></canvas>');#}
+{#                    new Chart(document.getElementById("heart_rate"), {#}
+{#                        data: data,#}
+{#                        type: "line",#}
+{#    });#}
+{#                reloadMyChart();#}
+            window.location.reload();
+            }, 20000);
+        </script>
+    </body>
+</html>
