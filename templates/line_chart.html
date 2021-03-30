@@ -43,14 +43,38 @@
             $.get('/heart_data/{{ ip }}', function(data) {
                 var ctx = $("#heart_rate").get(0).getContext("2d");
                  c = new Chart(ctx, {
-                    type: 'line', data: data['heart_rate']
+                    type: 'line',
+                     data: data['heart_rate'],
+                     options: {
+                        scales: {
+                            yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                min: 0,
+                                max: 100
+                                }
+                            }]
+                        }
+                    }
                 });
                 c.update(0)
             });
             $.get('/blood_data/{{ ip }}', function(data) {
                 var ctx = $("#blood_pressure").get(0).getContext("2d");
                  c = new Chart(ctx, {
-                    type: 'line', data: data['blood_pressure']
+                    type: 'line',
+                     data: data['blood_pressure'],
+                     options: {
+                        scales: {
+                            yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                min: 0,
+                                max: 100
+                                }
+                            }]
+                        }
+                    }
                 });
                 c.update(0)
             });

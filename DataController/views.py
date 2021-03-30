@@ -1,10 +1,12 @@
 import json
-
+import datetime
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-from DataController.models import HeartRate, BloodPressure
+from django.views.decorators.csrf import csrf_exempt
+
+from DataController.models import HeartRate, BloodPressure, Temperature
 from DeviceController.models import Device
 
 
@@ -13,22 +15,24 @@ def HeartRateData(request, ip):
     devices = Device.objects.get(IP_ADDRESS=ip)
     heart_rate_labels = []
     heart_rate_data = []
+    temp = []
+    temp1 = []
     heart_data = HeartRate.objects.filter(DEVICE=devices)
-    i = 0
     for ht in heart_data:
-        heart_rate_labels.append(str(ht.DATETIME.time()))
-        heart_rate_data.append(ht.VALUE)
-        i += 1
-        if i > 9:
-            break
-
+        temp.append(str(ht.DATETIME.time()))
+        temp1.append(ht.VALUE)
+    for i in range(10):
+        heart_rate_labels.append(temp.pop())
+        heart_rate_data.append(temp1.pop())
+    heart_rate_data.reverse()
+    heart_rate_labels.reverse()
     heart_rate = {
         "labels": heart_rate_labels,
         "datasets": [
             {
                 "data": heart_rate_data,
-                "backgroundColor": "rgba(202, 201, 197, 0.5)",
-                "borderColor": "rgba(202, 201, 197, 1)",
+                "backgroundColor": "rgba(202, 201, 197, 0.9)",
+                "borderColor": "rgba(190, 220, 220, 1)",
                 "pointBackgroundColor": "rgba(35, 78, 123, 0.69)",
                 "pointBorderColor": "#fff",
                 "label": "Heart Rate Data",
@@ -52,23 +56,30 @@ def BloodPressureData(request, ip):
     devices = Device.objects.get(IP_ADDRESS=ip)
     blood_pressure_labels = []
     blood_pressure_data = []
+    temp = []
+    temp1 = []
     heart_data = BloodPressure.objects.filter(DEVICE=devices)
-    i = 0
+    j = 0
     for ht in heart_data:
-        blood_pressure_labels.append(str(ht.DATETIME.time()))
-        blood_pressure_data.append(ht.VALUE)
-        i += 1
-        if i > 9:
+        temp.append(str(ht.DATETIME.time()))
+        temp1.append(ht.VALUE)
+        j = j + 1
+    for i in range(10):
+        if j > i:
+            blood_pressure_labels.append(temp.pop())
+            blood_pressure_data.append(temp1.pop())
+        else:
             break
-
+    blood_pressure_data.reverse()
+    blood_pressure_labels.reverse()
     blood_pressure = {
         "labels": blood_pressure_labels,
         "datasets": [
             {
                 "data": blood_pressure_data,
-                "backgroundColor": "rgba(202, 201, 197, 0.5)",
-                "borderColor": "rgba(202, 201, 197, 1)",
-                "pointBackgroundColor": "rgba(35, 78, 123, 0.69)",
+                "backgroundColor": "rgba(255, 129, 17, 0.56)",
+                "borderColor": "rgba(255, 129, 17, 1)",
+                "pointBackgroundColor": "rgba(255, 73, 33, 1)",
                 "pointBorderColor": "#fff",
                 "label": "Blood Pressure Data",
                 "name": "Blood Pressure Data"
@@ -85,3 +96,23 @@ def BloodPressureData(request, ip):
     # data1[d['pk']] = d['fields']
     print()
     return HttpResponse(json.dumps(dic), content_type="application/json")
+
+
+@csrf_exempt
+def saveData(request):
+    if request.method == 'POST':
+        ip = request.POST.get('ip_address')
+        heart_rate_data = request.POST.get('heart_rate')
+        blood_pressure_data = request.POST.get('blood_pressure')
+        temperature_data = request.POST.get('temperature')
+        datetime_now = datetime.datetime.now()
+        device = Device.objects.get(IP_ADDRESS=ip)
+        heart_rate = HeartRate(DEVICE=device, VALUE=heart_rate_data, DATETIME=datetime_now)
+        heart_rate.save()
+        blood_pressure = BloodPressure(DEVICE=device, VALUE=blood_pressure_data, DATETIME=datetime_now)
+        blood_pressure.save()
+        temperature = Temperature(DEVICE=device, VALUE=temperature_data, DATETIME=datetime_now)
+        temperature.save()
+        return HttpResponse(json.dumps({"status": "OK"}), content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({"default": "200"}), content_type="application/json")
