@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'DataController.apps.DatacontrollerConfig',
     'GraphController.apps.GraphcontrollerConfig',
     'chartjs',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
