@@ -25,7 +25,7 @@ SECRET_KEY = 's3hxt&xje*lj+$u)#vy*t-c5m-4)1ay8uogxj0a9ue&x2_$p7u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ssoad.pythonanywhere.com']
+ALLOWED_HOSTS = ['ssoad.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition
