@@ -19,7 +19,7 @@ def HeartRateData(request, ip):
     temp1 = []
     heart_data = HeartRate.objects.filter(DEVICE=devices)
     for ht in heart_data:
-        temp.append(str(ht.DATETIME.time()))
+        temp.append(str(ht.DATETIME.time())[:8])
         temp1.append(ht.VALUE)
     for i in range(10):
         heart_rate_labels.append(temp.pop())
@@ -61,7 +61,7 @@ def BloodPressureData(request, ip):
     heart_data = BloodPressure.objects.filter(DEVICE=devices)
     j = 0
     for ht in heart_data:
-        temp.append(str(ht.DATETIME.time()))
+        temp.append(str(ht.DATETIME.time())[:8])
         temp1.append(ht.VALUE)
         j = j + 1
     for i in range(10):
@@ -116,3 +116,28 @@ def saveData(request):
         return HttpResponse(json.dumps({"status": "OK"}), content_type="application/json")
     else:
         return HttpResponse(json.dumps({"default": "200"}), content_type="application/json")
+
+
+import asyncio
+from django.http import JsonResponse
+from asgiref.sync import sync_to_async
+from time import sleep
+
+
+@sync_to_async
+def crunching_stuff():
+    sleep(10)
+    print("Woke up after 10 seconds!")
+
+
+async def index(request):
+    json_payload = {
+        "message": "Hello world"
+    }
+    """
+    or also
+    asyncio.ensure_future(crunching_stuff())
+    loop.create_task(crunching_stuff())
+    """
+    asyncio.create_task(crunching_stuff())
+    return JsonResponse(json_payload)
