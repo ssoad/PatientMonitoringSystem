@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %}{% endblock title %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "GraphController/assets/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "GraphController/assets/bootstrap/css/custom.css" %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Acme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark navbar-custom">
+        <div class="container"><a class="navbar-brand" href="#">Patient Monitoring System</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarResponsive"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+
+                        <li class="nav-item"><a class="nav-link" href={% url 'dashboard' %}>Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href={% url 'devices' %}>Devices</a></li>
+                            <li class="nav-item"><a class="nav-link" href={% url 'logout' %}>Logout</a></li>
+                    {% else %}
+                             <li class="nav-item"><a class="nav-link" href="#">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href={% url 'login' %}>Log In</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div style="height: 100px"></div>
+    <section class="container">
+       {% block content %}
+        {% endblock content %}
+    </section>
+    <script src="{% static "GraphController/assets/js/jquery.min.js" %}"></script>
+<script src="{% static "GraphController/assets/bootstrap/js/bootstrap.min.js" %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+<script src="{% static  "GraphController/assets/js/theme.js" %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+Device List
+{% endblock title %}
+{%  block content %}
+    <center>
+ {%  for d in devices %}
+    <div class="card shadow-sm" style="border-radius: 15px 15px 15px 15px; width: 30rem; padding: 10px 10px 10px 10px">
+
+                <h5>IP : {{ d.IP_ADDRESS }}</h5>
+                <h5>Device Name : {{ d.DEVICE_NAME }}</h5>
+                <h5>Location : {{ d.LOCATION }}</h5>
+               <a style="margin: 20px 20px 20px 20px" href="view/{{ d.IP_ADDRESS }}" class="btn btn-secondary">View</a>
+            </div>
+     <br>
+    {%  endfor %}
+    </center>
+{% endblock content %}

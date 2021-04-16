@@ -28,3 +28,11 @@ def deviceList(request):
         "devices": devices_list
     }
     return JsonResponse(context)
+
+
+def deviceView(request):
+    devices = Device.objects.all()
+    context = {
+        'devices': devices
+    }
+    return render(request, 'device_list.html', context)

@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
@@ -27,3 +27,17 @@ def login_view(request):
         'form': form,
     }
     return render(request, "login.html", context)
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+
+
+
+@login_required
+def dashboard(request):
+    return render(request, "dashboard.html")
+
+
+def home(request):
+    return render(request, "dashboard.html")
