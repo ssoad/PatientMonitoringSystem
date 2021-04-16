@@ -35,4 +35,4 @@ def deviceView(request):
     context = {
         'devices': devices
     }
-    return render(request, 'line_chart.html', context)
+    return render(request, 'device_list.html', context)
