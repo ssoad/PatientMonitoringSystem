@@ -123,9 +123,9 @@ def TemperatureData(request, ip):
         "datasets": [
             {
                 "data": blood_pressure_data,
-                "backgroundColor": "rgba(255, 129, 17, 0.56)",
-                "borderColor": "rgba(255, 129, 17, 1)",
-                "pointBackgroundColor": "rgba(255, 73, 33, 1)",
+                "backgroundColor": "rgba(0, 135, 254, 0.56)",
+                "borderColor": "rgba(2, 75, 130, 1)",
+                "pointBackgroundColor": "rgba(2, 75, 130, 1)",
                 "pointBorderColor": "#fff",
                 "label": "Temperature Data",
                 "name": "Temperature Data"
@@ -168,9 +168,9 @@ def HumidityData(request, ip):
         "datasets": [
             {
                 "data": blood_pressure_data,
-                "backgroundColor": "rgba(255, 129, 17, 0.56)",
-                "borderColor": "rgba(255, 129, 17, 1)",
-                "pointBackgroundColor": "rgba(255, 73, 33, 1)",
+                "backgroundColor": "rgba(32, 218, 162, 0.56)",
+                "borderColor": "rgba(1, 81, 57, 1)",
+                "pointBackgroundColor": "rgba(1, 81, 57, 1)",
                 "pointBorderColor": "#fff",
                 "label": "Humidity Data",
                 "name": "Humidity Data"
