@@ -6,7 +6,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
-from DataController.models import HeartRate, BloodPressure, Temperature
+from DataController.models import HeartRate, BloodPressure, Temperature, Humidity
 from DeviceController.models import Device
 
 
@@ -98,13 +98,118 @@ def BloodPressureData(request, ip):
     return HttpResponse(json.dumps(dic), content_type="application/json")
 
 
+def TemperatureData(request, ip):
+    devices = Device.objects.get(IP_ADDRESS=ip)
+    blood_pressure_labels = []
+    blood_pressure_data = []
+    temp = []
+    temp1 = []
+    heart_data = Temperature.objects.filter(DEVICE=devices)
+    j = 0
+    for ht in heart_data:
+        temp.append(str(ht.DATETIME.time())[:8])
+        temp1.append(ht.VALUE)
+        j = j + 1
+    for i in range(10):
+        if j > i:
+            blood_pressure_labels.append(temp.pop())
+            blood_pressure_data.append(temp1.pop())
+        else:
+            break
+    blood_pressure_data.reverse()
+    blood_pressure_labels.reverse()
+    blood_pressure = {
+        "labels": blood_pressure_labels,
+        "datasets": [
+            {
+                "data": blood_pressure_data,
+                "backgroundColor": "rgba(255, 129, 17, 0.56)",
+                "borderColor": "rgba(255, 129, 17, 1)",
+                "pointBackgroundColor": "rgba(255, 73, 33, 1)",
+                "pointBorderColor": "#fff",
+                "label": "Temperature Data",
+                "name": "Temperature Data"
+            }
+        ]
+    }
+    dic = {
+        "temperature": blood_pressure,
+    }
+    # data = serialize("json", dic.all())
+    # data1={}
+    # for d in data:
+    #     print(type(d))
+    # data1[d['pk']] = d['fields']
+    print()
+    return HttpResponse(json.dumps(dic), content_type="application/json")
+
+def HumidityData(request, ip):
+    devices = Device.objects.get(IP_ADDRESS=ip)
+    blood_pressure_labels = []
+    blood_pressure_data = []
+    temp = []
+    temp1 = []
+    heart_data = Humidity.objects.filter(DEVICE=devices)
+    j = 0
+    for ht in heart_data:
+        temp.append(str(ht.DATETIME.time())[:8])
+        temp1.append(ht.VALUE)
+        j = j + 1
+    for i in range(10):
+        if j > i:
+            blood_pressure_labels.append(temp.pop())
+            blood_pressure_data.append(temp1.pop())
+        else:
+            break
+    blood_pressure_data.reverse()
+    blood_pressure_labels.reverse()
+    blood_pressure = {
+        "labels": blood_pressure_labels,
+        "datasets": [
+            {
+                "data": blood_pressure_data,
+                "backgroundColor": "rgba(255, 129, 17, 0.56)",
+                "borderColor": "rgba(255, 129, 17, 1)",
+                "pointBackgroundColor": "rgba(255, 73, 33, 1)",
+                "pointBorderColor": "#fff",
+                "label": "Humidity Data",
+                "name": "Humidity Data"
+            }
+        ]
+    }
+    dic = {
+        "humidity": blood_pressure,
+    }
+    # data = serialize("json", dic.all())
+    # data1={}
+    # for d in data:
+    #     print(type(d))
+    # data1[d['pk']] = d['fields']
+    print()
+    return HttpResponse(json.dumps(dic), content_type="application/json")
+
+
+
+
+
+
+
+
+
+
+
+
+
 @csrf_exempt
 def saveData(request):
+    print(request.POST)
     if request.method == 'POST':
         ip = request.POST.get('ip_address')
+        print(ip)
         heart_rate_data = request.POST.get('heart_rate')
         blood_pressure_data = request.POST.get('blood_pressure')
         temperature_data = request.POST.get('temperature')
+        humidity_data = request.POST.get('humidity')
         datetime_now = datetime.datetime.now()
         device = Device.objects.get(IP_ADDRESS=ip)
         heart_rate = HeartRate(DEVICE=device, VALUE=heart_rate_data, DATETIME=datetime_now)
@@ -113,6 +218,8 @@ def saveData(request):
         blood_pressure.save()
         temperature = Temperature(DEVICE=device, VALUE=temperature_data, DATETIME=datetime_now)
         temperature.save()
+        humidity = Humidity(DEVICE=device, VALUE=humidity_data,DATETIME=datetime_now)
+        humidity.save()
         return HttpResponse(json.dumps({"status": "OK"}), content_type="application/json")
     else:
         return HttpResponse(json.dumps({"default": "200"}), content_type="application/json")

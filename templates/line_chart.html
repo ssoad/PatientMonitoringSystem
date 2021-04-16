@@ -23,8 +23,14 @@
             <div style="height: 100px;"></div>
         </header>
         <section class="container">
-            <button type="button" class="btn btn-secondary" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">IP: {{ ip }}</button>
-            <span class="badge badge-pill badge-secondary">Secondary</span>
+
+            <div class="card shadow-sm" style="border-radius: 15px 15px 15px 15px; width: 30rem; padding: 10px 10px 10px 10px">
+{#                     <button type="button" class="btn btn-secondary" data-toggle="popover" title="Popover title">IP: {{ ip }}</button>#}
+                <h5>IP : {{ device.IP_ADDRESS }}</h5>
+                <h5>Device Name : {{ device.DEVICE_NAME }}</h5>
+                <h5>Location : {{ device.LOCATION }}</h5>
+
+            </div>
             <div style="height: 50px;"></div>
             <div class="row md-6">
                 <div class="col-lg-6 col-md-12">
@@ -43,13 +49,37 @@
                      </div>
                 </div>
             </div>
+            <br>
+             <div class="row md-6">
+                <div class="col-lg-6 col-md-12">
+                    <div class="card shadow-sm">
+                    <div class="chart-container" style="height:400px; width:600px;">
+                        <canvas id="temperature" width="80" height="50"></canvas>
+                        <!-- <button class="btn btn-primary">Test</button> -->
+                    </div>
+                    </div>
+                </div>
+                 <div class="col-lg-6 col-md-12">
+                    <div class="card shadow-sm">
+                    <div class="chart-container" style="height:400px; width:600px;">
+                        <canvas id="humidity" width="80" height="50"></canvas>
+                        <!-- <button class="btn btn-primary">Test</button> -->
+                    </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row md-6">
+
+            </div>
         </section>
         
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
         <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
         <script type="text/javascript">
             var c;
-            $.get('/heart_data/{{ ip }}', function(data) {
+            $.get('/heart_data/{{ device.IP_ADDRESS }}', function(data) {
                 var ctx = $("#heart_rate").get(0).getContext("2d");
                  c = new Chart(ctx, {
                     type: 'line',
@@ -68,11 +98,49 @@
                 });
                 c.update(0)
             });
-            $.get('/blood_data/{{ ip }}', function(data) {
+            $.get('/blood_data/{{ device.IP_ADDRESS }}', function(data) {
                 var ctx = $("#blood_pressure").get(0).getContext("2d");
                  c = new Chart(ctx, {
                     type: 'line',
                      data: data['blood_pressure'],
+                     options: {
+                        scales: {
+                            yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                min: 0,
+                                max: 100
+                                }
+                            }]
+                        }
+                    }
+                });
+                c.update(0)
+            });
+            $.get('/temp_data/{{ device.IP_ADDRESS }}', function(data) {
+                var ctx = $("#temperature").get(0).getContext("2d");
+                 c = new Chart(ctx, {
+                    type: 'line',
+                     data: data['temperature'],
+                     options: {
+                        scales: {
+                            yAxes: [{
+                            ticks: {
+                                beginAtZero:true,
+                                min: 0,
+                                max: 100
+                                }
+                            }]
+                        }
+                    }
+                });
+                c.update(0)
+            });
+            $.get('/humidity_data/{{ device.IP_ADDRESS }}', function(data) {
+                var ctx = $("#humidity").get(0).getContext("2d");
+                 c = new Chart(ctx, {
+                    type: 'line',
+                     data: data['humidity'],
                      options: {
                         scales: {
                             yAxes: [{

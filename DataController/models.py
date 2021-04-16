@@ -28,3 +28,12 @@ class Temperature(models.Model):
 
     def __str__(self):
         return str(str(self.DEVICE.IP_ADDRESS) + " : " + self.DEVICE.DEVICE_NAME + " : " + str(self.VALUE))
+
+
+class Humidity(models.Model):
+    DEVICE = models.ForeignKey(Device, on_delete=models.CASCADE)
+    VALUE = models.FloatField(blank=False)
+    DATETIME = models.DateTimeField(blank=False)
+
+    def __str__(self):
+        return str(str(self.DEVICE.IP_ADDRESS) + " : " + self.DEVICE.DEVICE_NAME + " : " + str(self.VALUE))

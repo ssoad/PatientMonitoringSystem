@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from chartjs.views.lines import BaseLineChartView
+from DataController.models import Temperature, Humidity, BloodPressure , HeartRate
 import json
 from django.core.serializers import serialize
 from django.http import HttpResponse
@@ -31,10 +32,10 @@ line_chart = TemplateView.as_view(template_name='line_chart.html')
 line_chart_json = LineChartJSONView.as_view()
 
 
-
-
 def dataView(request, ip):
+    device = Device.objects.get(IP_ADDRESS=ip)
+
     context = {
-        'ip': ip
+        'device': device
     }
-    return render(request,'line_chart.html', context)
+    return render(request, 'line_chart.html', context)
